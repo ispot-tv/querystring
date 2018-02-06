@@ -1,0 +1,14 @@
+{
+  "name": "querystring-minilib",
+  "version": "0.1.0",
+  "description": "Mini library for dealing with query string params",
+  "main": "querystring.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ispot-tv/querystring"
+  },
+  "dependencies": {
+    "jquery": "~2.2.2"
+  },
+  "license": "The MIT License (MIT)"
+}
