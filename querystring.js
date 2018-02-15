@@ -3,9 +3,37 @@
     var n = {};
     n.delayedPush = "";
     n.get = function (n) {
+
+        if (n == undefined) {
+
+            var search = location.search;
+
+            return this.parseSearch(search);
+
+        }
+
         var e = new RegExp("[?&]" + n + "=([^&#]*)").exec(window.location.href);
         return null === e ? null : decodeURIComponent(e[1]) || 0;
+
     };
+    n.parseSearch = function (search) {
+        if (!search) {
+            return {};
+        }
+
+        search = JSON.parse('{"' + decodeURI(search.substring(1)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}');
+
+        for (var key in search) {
+            if (search.hasOwnProperty(key)) {
+                search[key] = decodeURIComponent(search[key]);
+            }
+        }
+
+        return search;
+
+    },
+
+
     n.parse = function (n) {
         return "string" != typeof n ? {} : (n = n.trim().replace(/^\?/, ""), n ? n.trim().split("&").reduce(function (n, e) {
             var o = e.replace(/\+/g, " ").split("="), r = o[0], t = o[1];
@@ -21,7 +49,7 @@
         }).join("&") : ""
     };
     n.clean = function (s) {
-        if(s) {
+        if (s) {
             var t = s.split("&");
             var u = [];
             for (var i = 0; i < t.length; i++) {
@@ -30,8 +58,7 @@
                 }
             }
             return u.join("&");
-        }
-        else{
+        } else {
             return "";
         }
     };
@@ -44,7 +71,10 @@
             }
         }
         u = n.clean(u.join("&"));
-        history.pushState({}, "", window.location.pathname + "?" + u);
+        history.replaceState({}, "", window.location.pathname + "?" + u);
+    };
+    n.removeAll = function () {
+        history.replaceState({}, "", window.location.pathname);
     };
     n.add = function (e, o) {
         n.push(e, o);
@@ -54,12 +84,17 @@
         var r = n.parse(location.search);
         r[e] = o;
         for (var v in r) {
-            u.push(v + "=" + r[v]);
+            u.push(v + "=" + encodeURIComponent(r[v]));
         }
         var t = n.clean(u.join("&"));
 
-
-        history.pushState({}, "", window.location.pathname + "?" + t)
+        try {
+            history.replaceState({}, "", window.location.pathname + "?" + t);
+        } catch(e) {
+            if (e.toString().indexOf("DOM Exception 18") !== -1) {
+                window.location.reload();
+            }
+        }
     };
     "undefined" != typeof module && module.exports ? module.exports = n : window.queryString = n
 }();
