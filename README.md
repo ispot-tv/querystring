@@ -1,2 +1,2 @@
-# querystring
+# ispot.tv-querystring
 Mini library for dealing with query string params
