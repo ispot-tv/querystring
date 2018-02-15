@@ -1,6 +1,6 @@
 {
   "name": "querystring-minilib",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Mini library for dealing with query string params",
   "main": "querystring.js",
   "repository": {
